@@ -28,14 +28,14 @@ class SqliteManager:
         conn.commit()
         cur.close()
 
-    def update(self,tableName,data={},where):
+    def update(self,tableName,data={},where=''):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
         str = 'update ? set '
         for k,v in data:
             str = str+' '+k+'='+v
 
-        str = str+' where ?'
+        str = str+' ?'
         cur.execute(str,tableName,where)
         conn.commit()
         cur.close()
@@ -43,14 +43,14 @@ class SqliteManager:
     def delete(self,tableName,where):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('delete from ? where ?',tableName,where)
+        cur.execute('delete from ? ?',tableName,where)
         conn.commit()
         cur.close()
 
     def sel(self,tableName,clumns=[],where='1=1'):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('select ? from ? where ?',','.join(clumns),tableName,where)
+        cur.execute('select ? from ? ?',','.join(clumns),tableName,where)
         s = cur.fetchall()
         return s
 

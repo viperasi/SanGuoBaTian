@@ -57,7 +57,7 @@ def dbMenuOpenFile():
     filePath = fd.go()
     if filePath!=None:
         sm = SqliteManager.SqliteManager(filePath)
-        sm.getConnect()
+
     else:
         print 'file path is none'
 
