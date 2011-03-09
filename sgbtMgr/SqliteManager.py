@@ -24,7 +24,7 @@ class SqliteManager:
     def inert(self,tableName,data={}):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('insert into ?(?) values(?)',tableName,','.join(data.keys()),','.join(data.values()))
+        cur.execute('insert into ?(?) values(?)',(tableName,','.join(data.keys()),','.join(data.values())))
         conn.commit()
         cur.close()
 
@@ -36,22 +36,36 @@ class SqliteManager:
             str = str+' '+k+'='+v
 
         str = str+' ?'
-        cur.execute(str,tableName,where)
+        cur.execute(str,(tableName,where))
         conn.commit()
         cur.close()
 
     def delete(self,tableName,where):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('delete from ? ?',tableName,where)
+        cur.execute('delete from ? ?',(tableName,where))
         conn.commit()
         cur.close()
 
     def sel(self,tableName,clumns=[],where='1=1'):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('select ? from ? ?',','.join(clumns),tableName,where)
+        ##cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
+        cur.execute('select ? from ? ?',(','.join(clumns),tableName,where))
         s = cur.fetchall()
         return s
 
+
+#module test
+
+def main():
+    conn = sqlite3.connect('D:\\nb65_workspace\\SanGuoBaTian\\db\\sgbt.db')
+    cur = conn.cursor()
+    cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
+    s = cur.fetchall()
+    print s
+
+
+if __name__ == '__main__':
+    main()
 

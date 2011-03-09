@@ -15,13 +15,16 @@ import SimpleDialog
 import FileDialog
 
 import SqliteManager
+import TablesDAO
 
 root = Tkinter.Tk()
+dbPath = ''
 
 def main():
     init()
 
 def init():
+    root.option_add("*Font", "宋体")
     root.title('三国霸天传数据编辑工具')
     root.geometry('800x600+100+100')
     initMenu()
@@ -56,14 +59,28 @@ def dbMenuOpenFile():
     fd = FileDialog.LoadFileDialog(root)
     filePath = fd.go()
     if filePath!=None:
-        sm = SqliteManager.SqliteManager(filePath)
+        dotIndex = filePath.rfind('.')
+        if dotIndex!=-1:
+            ext = filePath.rsplit('.',1)
+            if ext[1]=='db':
+                #dbPath = filePath
+                loadTable(filePath)
+            else:
+                SimpleDialog.SimpleDialog(root,text='请选择sqlite数据库(*.db)文件,\n选择的文件无效.',buttons=['确定']).go()
 
-    else:
-        print 'file path is none'
-
+def loadTable(dbPath):
+    tablesFrame = Tkinter.Frame(width=100,bg='red')
+    tablesList = Tkinter.Listbox(tablesFrame)
+    tablesList.insert(Tkinter.END,'表格')
+    tdao = TablesDAO.TablesDAO(dbPath)
+    print 'dbPath---->'+dbPath
+    tables = tdao.selTables()
+    print tables
+    tablesList.pack()
+    tablesFrame.place(x = 0,y = 0,anchor = Tkinter.NW)
 
 def dbMenuExit():
-    print 'exit'
+    root.destroy()
 
 def createScriptMenu(rootMenu):
     scriptMenu = Tkinter.Menu(rootMenu,tearoff=0)
