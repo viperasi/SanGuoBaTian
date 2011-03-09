@@ -50,8 +50,8 @@ class SqliteManager:
     def sel(self,tableName,clumns=[],where='1=1'):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        ##cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
-        cur.execute('select ? from ? ?',(','.join(clumns),tableName,where))
+        cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
+        ##cur.execute('select ? from ? ?',(','.join(clumns),tableName,where))
         s = cur.fetchall()
         return s
 

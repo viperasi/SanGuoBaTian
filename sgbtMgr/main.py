@@ -73,9 +73,9 @@ def loadTable(dbPath):
     tablesList = Tkinter.Listbox(tablesFrame)
     tablesList.insert(Tkinter.END,'表格')
     tdao = TablesDAO.TablesDAO(dbPath)
-    print 'dbPath---->'+dbPath
     tables = tdao.selTables()
-    print tables
+    for t in tables:
+        tablesList.insert(Tkinter.END,t)
     tablesList.pack()
     tablesFrame.place(x = 0,y = 0,anchor = Tkinter.NW)
 
