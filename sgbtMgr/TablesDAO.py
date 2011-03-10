@@ -22,4 +22,17 @@ class TablesDAO:
         self.sm = SqliteManager.SqliteManager(self.dbPath)
 
     def selTables(self):
-        return self.sm.sel(tableName='sqlite_master',clumns=['name','tbl_name'],where='where name like "tbl_%"')
+        return self.sm.query('select name from sqlite_master where type=\'table\' and name like \'tbl_%\'')
+
+    def selTableClumns(self,tableName):
+        return self.sm.query('PRAGMA  table_info('+tableName+')')
+
+
+#module test
+def main():
+    td = TablesDAO('D:\\nb65_workspace\\SanGuoBaTian\\db\\sgbt.db')
+    clumns = td.selTableClumns('tbl_cities')
+    print clumns
+
+if __name__=='__main__':
+    main()

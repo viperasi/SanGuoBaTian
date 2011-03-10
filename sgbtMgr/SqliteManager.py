@@ -21,37 +21,17 @@ class SqliteManager:
     def setFilePath(self,fp):
         self.filePath = fp
 
-    def inert(self,tableName,data={}):
+    def update(self,sql):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        cur.execute('insert into ?(?) values(?)',(tableName,','.join(data.keys()),','.join(data.values())))
+        cur.execute(sql)
         conn.commit()
         cur.close()
 
-    def update(self,tableName,data={},where=''):
+    def query(self,sql):
         conn = sqlite3.connect(self.filePath)
         cur = conn.cursor()
-        str = 'update ? set '
-        for k,v in data:
-            str = str+' '+k+'='+v
-
-        str = str+' ?'
-        cur.execute(str,(tableName,where))
-        conn.commit()
-        cur.close()
-
-    def delete(self,tableName,where):
-        conn = sqlite3.connect(self.filePath)
-        cur = conn.cursor()
-        cur.execute('delete from ? ?',(tableName,where))
-        conn.commit()
-        cur.close()
-
-    def sel(self,tableName,clumns=[],where='1=1'):
-        conn = sqlite3.connect(self.filePath)
-        cur = conn.cursor()
-        cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
-        ##cur.execute('select ? from ? ?',(','.join(clumns),tableName,where))
+        cur.execute(sql)
         s = cur.fetchall()
         return s
 
@@ -61,7 +41,7 @@ class SqliteManager:
 def main():
     conn = sqlite3.connect('D:\\nb65_workspace\\SanGuoBaTian\\db\\sgbt.db')
     cur = conn.cursor()
-    cur.execute('select name from sqlite_master where name like \'tbl_%\' and type=\'table\' order by name')
+    cur.execute('PRAGMA  table_info(tbl_cities)')
     s = cur.fetchall()
     print s
 

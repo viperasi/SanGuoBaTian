@@ -63,21 +63,38 @@ def dbMenuOpenFile():
         if dotIndex!=-1:
             ext = filePath.rsplit('.',1)
             if ext[1]=='db':
-                #dbPath = filePath
                 loadTable(filePath)
             else:
                 SimpleDialog.SimpleDialog(root,text='请选择sqlite数据库(*.db)文件,\n选择的文件无效.',buttons=['确定']).go()
 
 def loadTable(dbPath):
-    tablesFrame = Tkinter.Frame(width=100,bg='red')
+    tablesFrame = Tkinter.Frame(width=100)
     tablesList = Tkinter.Listbox(tablesFrame)
     tablesList.insert(Tkinter.END,'表格')
     tdao = TablesDAO.TablesDAO(dbPath)
     tables = tdao.selTables()
     for t in tables:
         tablesList.insert(Tkinter.END,t)
+    tablesList.bind('<Double-Button-1>',lambda x:tablesListListener(tablesList.get(tablesList.curselection()),dbPath))
     tablesList.pack()
     tablesFrame.place(x = 0,y = 0,anchor = Tkinter.NW)
+
+def tablesListListener(tableName,dbPath):
+    print "dbPath--->"+dbPath
+    dataList = Tkinter.Frame()
+    tdao = TablesDAO.TablesDAO(dbPath)
+    clumns = tdao.selTableClumns(tableName[0])
+    cLists = []
+    i = 0
+    for c in clumns:
+        print c
+        cList = Tkinter.Listbox(dataList)
+        cList.insert(Tkinter.END,c[1])
+        cList.pack()
+        cLists.append(cList)
+        i=i+1
+
+    dataList.place(x = 110,y=0,anchor=Tkinter.CENTER)
 
 def dbMenuExit():
     root.destroy()
