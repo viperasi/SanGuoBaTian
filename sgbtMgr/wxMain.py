@@ -14,7 +14,7 @@ import wx
 
 def init():
     app = wx.App()
-    frame=wx.Frame(None,title="三国霸天传管理工具")
+    frame=wx.Frame(None,title=u'三国霸天传管理工具')
     frame.Show()
     app.MainLoop()
 
